@@ -47,8 +47,17 @@ Todos os caminhos são relativos, pelo que a aplicação funciona também num su
 - Máximo de 150 candidatas, 24 respostas selecionadas, 3–20 letras por resposta, 35 × 35 casas e 500 caracteres por pista.
 - A seleção é uma heurística transparente: comprimento + 3 × log₂(frequência + 1). Não faz análise semântica, lematização nem distinção entre nomes e verbos. Palavras com hífen são separadas. Só são aceites letras que normalizem para A–Z.
 - As pistas usam uma frase original com pelo menos três outras palavras e até 500 caracteres. Todas as ocorrências normalizadas da resposta são ocultadas. Esta regra não garante uma pista única, interessante ou inequívoca: a revisão humana é essencial. Sem contexto suficiente, a pista fica vazia.
-- O gerador faz 18 tentativas, com procura ramificada e retrocesso limitado (até 95 expansões por tentativa, até três palavras alternativas e duas posições por palavra). Cede controlo ao navegador entre tentativas e mostra progresso. Prefere número de palavras, depois cruzamentos, depois área menor. Não garante uma solução ótima nem que todas as palavras caibam. O desempenho varia conforme o dispositivo e a seleção.
+- O gerador faz 18 tentativas, com procura ramificada e retrocesso limitado (até 110 expansões por tentativa, até três palavras alternativas e duas posições por palavra). Cede controlo ao navegador durante a procura e entre tentativas, mostra progresso e permite cancelar. A procura termina após as tentativas previstas ou cerca de seis segundos; uma operação individual pode ultrapassar ligeiramente este prazo. Prefere número de palavras, depois cruzamentos, depois o menor lado do quadrado e maior equilíbrio entre largura e altura. Continua a explorar alternativas mesmo depois de encontrar uma disposição com todas as palavras. Não garante uma solução ótima nem que todas as palavras caibam. O desempenho varia conforme o dispositivo e a seleção.
 - A validação independente confirma que cada sequência horizontal ou vertical corresponde a uma resposta declarada, que as letras coincidem, que não há sobreposição na mesma direção e que todas as respostas estão ligadas.
 - Texto e ficheiros são sempre tratados como dados. Conteúdo do utilizador é apresentado com `textContent` e propriedades de elementos, nunca com `innerHTML`.
 
 A aplicação não inclui um service worker: para uso sem ligação basta guardar esta pasta e abrir `index.html`. Uma página alojada precisa de ligação no primeiro carregamento.
+
+## Melhorias de outubro de 2026
+
+- Grelha sempre quadrada (N × N), incluindo impressão e JSON importados. As palavras ocupam um retângulo centrado no menor quadrado que o contém; as restantes casas são bloqueadas. Não se garante uma superfície integralmente preenchida com letras ou simetria dos blocos: isso não é possível para qualquer seleção sem acrescentar respostas externas.
+- Importações e sessões antigas retangulares são convertidas para quadrado, preservando as respostas preenchidas e as pistas. A validação aceita o formato retangular antigo para permitir esta migração.
+- Procura com prioridade à compactação quadrada, alternativas após colocação de todas as respostas, limite de tempo e cancelamento. Cancelar conserva o passatempo anterior.
+- Contagem de casas preenchidas e ajuste do tamanho das casas entre 24 e 48 píxeis; deslocamento horizontal preservado nos ecrãs pequenos.
+- Opções guardadas quando são alteradas e palavras omitidas recuperadas corretamente ao restaurar uma sessão.
+- Rodapé com ligação para [TIC, Educação e WEB](https://jfborges.com/).
